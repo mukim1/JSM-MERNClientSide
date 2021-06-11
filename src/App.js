@@ -1,20 +1,38 @@
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import { AppBar, Container, Grid, Grow, Toolbar, Typography } from '@material-ui/core'
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import Form from './components/Form/Form'
+import Posts from './components/Posts/Posts'
+import { getPost } from './redux/actions/post'
+import useStyls from './styles'
 
-function App() {
+export default function App() {
+  const classes = useStyls()
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getPost())
+  }, [dispatch])
+
   return (
-    <div>
-      <Router>
-        <h3>Mukim billah</h3>
-        <Switch>
-        </Switch>
-      </Router>
-    </div>
-  );
+    <Container maxWidth="lg">
+      <AppBar className={classes.appBar} position="static" color="inherit">
+        <Typography className={classes.heading} variant="h2" align="center">Memorias</Typography>
+        <img className={classes.image} src="" alt="" />
+      </AppBar>
+      <Grow in>
+        <Container>
+          <Grid container justify="space-between" alignItems="stretch" spacing={3}>
+            <Grid item xs={12} sm={7}>
+              <Posts />
+              <Posts />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Form />
+            </Grid>
+          </Grid>
+        </Container>
+      </Grow>
+    </Container>
+  )
 }
-
-export default App;
