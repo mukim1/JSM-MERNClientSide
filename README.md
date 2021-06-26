@@ -1,1 +1,1 @@
-We will update meadme file later
+### Live URL: https://mernblogsite.netlify.app/
