@@ -1,11 +1,35 @@
 import React from 'react'
 import { AppBar, Typography, Toolbar, Avatar, Button } from '@material-ui/core'
-import { Link } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 import useStyls from './styles'
-
+import { useState } from 'react'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { LOGOUT } from '../../redux/constants/actionTypes'
+import decode from 'jwt-decode'
+/* eslint-disable */
 export default function Navbar() {
     const classes = useStyls()
-    const user = null
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')))
+    const location = useLocation()
+    const history = useHistory()
+    const dispatch = useDispatch()
+
+    const logOut = () => {
+        dispatch({ type: LOGOUT })
+        history.push('/')
+    }
+
+    useEffect(() => {
+        const token = user?.token
+        if (token) {
+            const decodedToken = decode(token)
+            if (decodedToken.exp * 1000 < new Date().getTime()) {
+                logOut()
+            }
+        }
+        setUser(JSON.parse(localStorage.getItem('profile')))
+    }, [location])
 
     return (
         <div>
@@ -23,7 +47,7 @@ export default function Navbar() {
                             <Typography className={classes.userName} variant="h6">
                                 {user.result.name}
                             </Typography>
-                            <Button className={classes.logout} variant="contained" color="secondary">Log out</Button>
+                            <Button className={classes.logout} variant="contained" color="secondary" onClick={logOut} >Log out</Button>
                         </div>
                     ) : (
                         <div>
